@@ -235,3 +235,87 @@ ul li span {
 ul li span:hover {
     background: var(--button-hover);
 }
+
+/* Add these responsive styles to your existing CSS */
+
+/* Base responsive settings */
+@media (max-width: 768px) {
+    .todo-app {
+        width: 95%;
+        padding: 30px 20px 50px;
+        margin: 50px auto 20px;
+    }
+    
+    #add-button {
+        padding: 16px 30px;
+    }
+    
+    .time-fields {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .time-field {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .todo-app h2 {
+        font-size: 20px;
+    }
+    
+    .row {
+        flex-direction: column;
+        background: transparent;
+        padding-left: 0;
+    }
+    
+    input[type="text"] {
+        width: 100%;
+        margin-bottom: 10px;
+        border-radius: 30px;
+        background: var(--input-background);
+        padding: 15px 20px;
+    }
+    
+    #add-button {
+        width: 100%;
+        padding: 12px 0;
+    }
+    
+    ul li {
+        padding: 12px 8px 12px 45px;
+        font-size: 15px;
+    }
+    
+    .task-times {
+        font-size: 11px;
+    }
+    
+    #theme-toggle {
+        top: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+}
+
+/* Ensure inputs are properly sized on small screens */
+input[type="datetime-local"] {
+    width: 100%;
+}
+
+/* Improve touch targets for mobile */
+@media (max-width: 768px) {
+    ul li span {
+        width: 44px;
+        height: 44px;
+    }
+    
+    ul li::before {
+        height: 28px;
+        width: 28px;
+    }
+}
