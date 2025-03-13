@@ -84,12 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Create list item
         const li = document.createElement('li');
-        
-        // Create task text span
-        const taskTextSpan = document.createElement('span');
-        taskTextSpan.className = 'task-text';
-        taskTextSpan.textContent = inputBox.value;
-        li.appendChild(taskTextSpan);
+        li.textContent = inputBox.value;
         
         // Add time information
         const timeSpan = document.createElement('div');
@@ -101,82 +96,14 @@ document.addEventListener('DOMContentLoaded', function() {
         li.setAttribute('data-start-time', startTime);
         li.setAttribute('data-end-time', endTime);
         
-        // Create edit button
-        const editBtn = document.createElement('span');
-        editBtn.innerHTML = '<i class="fas fa-edit"></i>';
-        editBtn.className = 'edit-btn';
-        editBtn.title = 'Edit task';
-        li.appendChild(editBtn);
-        
         // Create delete button
-        const deleteBtn = document.createElement('span');
-        deleteBtn.innerHTML = '\u00d7'; // × symbol
-        deleteBtn.className = 'delete-btn';
-        deleteBtn.title = 'Delete task';
-        li.appendChild(deleteBtn);
+        const span = document.createElement('span');
+        span.innerHTML = '\u00d7'; // × symbol
+        span.className = 'delete-btn';
+        span.title = 'Delete task';
         
-        // Create edit mode container
-        const editMode = document.createElement('div');
-        editMode.className = 'edit-mode';
-        
-        // Create edit input
-        const editInput = document.createElement('input');
-        editInput.type = 'text';
-        editInput.className = 'edit-input';
-        editInput.value = inputBox.value;
-        editMode.appendChild(editInput);
-        
-        // Create edit time fields
-        const editTimeFields = document.createElement('div');
-        editTimeFields.className = 'time-fields';
-        
-        // Start time field
-        const startTimeField = document.createElement('div');
-        startTimeField.className = 'time-field';
-        const startTimeLabel = document.createElement('label');
-        startTimeLabel.textContent = 'Start Time';
-        const startTimeEdit = document.createElement('input');
-        startTimeEdit.type = 'datetime-local';
-        startTimeEdit.className = 'edit-start-time';
-        startTimeEdit.value = startTime;
-        startTimeField.appendChild(startTimeLabel);
-        startTimeField.appendChild(startTimeEdit);
-        
-        // End time field
-        const endTimeField = document.createElement('div');
-        endTimeField.className = 'time-field';
-        const endTimeLabel = document.createElement('label');
-        endTimeLabel.textContent = 'Completion Time';
-        const endTimeEdit = document.createElement('input');
-        endTimeEdit.type = 'datetime-local';
-        endTimeEdit.className = 'edit-end-time';
-        endTimeEdit.value = endTime;
-        endTimeField.appendChild(endTimeLabel);
-        endTimeField.appendChild(endTimeEdit);
-        
-        // Add time fields to edit mode
-        editTimeFields.appendChild(startTimeField);
-        editTimeFields.appendChild(endTimeField);
-        editMode.appendChild(editTimeFields);
-        
-        // Create action buttons
-        const editActions = document.createElement('div');
-        editActions.className = 'edit-actions';
-        
-        const saveBtn = document.createElement('button');
-        saveBtn.className = 'save-btn';
-        saveBtn.textContent = 'Save';
-        
-        const cancelBtn = document.createElement('button');
-        cancelBtn.className = 'cancel-btn';
-        cancelBtn.textContent = 'Cancel';
-        
-        editActions.appendChild(saveBtn);
-        editActions.appendChild(cancelBtn);
-        editMode.appendChild(editActions);
-        
-        // Add edit mode to list item
-        li.appendChild(editMode);
+        // Add delete button to list item
+        li.appendChild(span);
         
         // Add list item to task list
         taskList.appendChild(li);
@@ -194,63 +121,17 @@ document.addEventListener('DOMContentLoaded', function() {
         saveTasks();
     }
 
-    // Event delegation for task list (check/uncheck, edit, and delete)
+    // Event delegation for task list (check/uncheck and delete)
     taskList.addEventListener('click', function(e) {
-        const target = e.target;
-        const li = target.closest('li');
-        
-        if (!li) return;
-        
-        // If clicked on list item or task text, toggle checked class
-        if (target === li || (target.classList.contains('task-text') && !li.classList.contains('editing'))) {
-            li.classList.toggle('checked');
+        // If clicked on list item, toggle checked class
+        if (e.target.tagName === 'LI') {
+            e.target.classList.toggle('checked');
             saveTasks();
-        }
-        // If clicked on edit button, enter edit mode
-        else if (target.classList.contains('edit-btn') || target.parentElement.classList.contains('edit-btn')) {
-            li.classList.add('editing');
         }
         // If clicked on delete button, remove the list item
-        else if (target.classList.contains('delete-btn') || target.parentElement.classList.contains('delete-btn')) {
-            li.remove();
+        else if (e.target.className === 'delete-btn') {
+            e.target.parentElement.remove();
             saveTasks();
-        }
-        // If clicked on save button, save edits
-        else if (target.classList.contains('save-btn')) {
-            const editInput = li.querySelector('.edit-input');
-            const startTimeEdit = li.querySelector('.edit-start-time');
-            const endTimeEdit = li.querySelector('.edit-end-time');
-            const taskText = li.querySelector('.task-text');
-            const taskTimes = li.querySelector('.task-times');
-            
-            // Validate times
-            if (!startTimeEdit.value || !endTimeEdit.value) {
-                alert('Please select both start and completion times');
-                return;
-            }
-            
-            if (new Date(startTimeEdit.value) > new Date(endTimeEdit.value)) {
-                alert('Start time cannot be after completion time');
-                return;
-            }
-            
-            // Update task text and times
-            taskText.textContent = editInput.value;
-            taskTimes.innerHTML = `Start: ${formatDate(startTimeEdit.value)} <br> End: ${formatDate(endTimeEdit.value)}`;
-            
-            // Update data attributes
-            li.setAttribute('data-start-time', startTimeEdit.value);
-            li.setAttribute('data-end-time', endTimeEdit.value);
-            
-            // Exit edit mode
-            li.classList.remove('editing');
-            
-            // Save changes
-            saveTasks();
-        }
-        // If clicked on cancel button, exit edit mode without saving
-        else if (target.classList.contains('cancel-btn')) {
-            li.classList.remove('editing');
         }
     });
 
